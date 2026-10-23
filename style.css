@@ -226,3 +226,24 @@ header .nav-contact{display:inline-flex;align-items:center;justify-content:cente
 .hero-photo{background:url(hero-tribal-landscape.svg) center/cover no-repeat;filter:brightness(.55)}
 .hero:after{background:linear-gradient(90deg,rgba(0,0,0,.56),rgba(0,0,0,.18) 75%),linear-gradient(0deg,rgba(0,0,0,.3),transparent 55%)}
 @media(max-width:700px){.hero:after{background:linear-gradient(90deg,rgba(0,0,0,.62),rgba(0,0,0,.3))}}
+
+/* Vector stars render identically on phones and desktop, without emoji substitution. */
+.asterisk-mark{display:block;width:1em;height:1em;overflow:visible}
+h1.hero-simple .star .asterisk-mark{width:1em;height:1em}
+.ticker i{display:block;flex:none}
+.client-slot{display:contents}
+/* Two complete, equal-width logo slots per mobile page. */
+@media(max-width:700px){
+ .top-clients .clients{display:block;min-height:0;padding:10px 0}
+ .top-clients .section-head{margin:0 0 5px}
+ .top-clients #clients h2{font-size:10px;line-height:1.2}
+ .top-clients .clients-carousel{gap:8px;width:100%}
+ .top-clients .client-logos{height:58px;padding:0;gap:12px;justify-content:flex-start;overflow:hidden;scroll-snap-type:none;touch-action:pan-y;overscroll-behavior:auto}
+ .top-clients .client-slot{display:flex;flex:0 0 calc((100% - 12px)/2);min-width:0;height:58px;align-items:center;justify-content:center}
+ .top-clients .client-logo{flex:none;max-width:calc(100% - 8px)}
+ .top-clients .logo-tokens{width:84px}
+ .top-clients .logo-morty{width:88px;height:44px}
+ .top-clients .logo-vyshel{width:46px}
+ .top-clients .logo-fleshveil{width:44px;height:44px}
+ .top-clients .client-arrow{width:32px;height:32px;flex-basis:32px;font-size:18px}
+}

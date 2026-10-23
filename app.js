@@ -1,31 +1,46 @@
 const menu=document.querySelector('.menu'), nav=document.querySelector('#mobile-nav');
 menu.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));nav.hidden=!open;menu.textContent=open?'Close −':'Menu +';});
 nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.hidden=true;menu.setAttribute('aria-expanded','false');menu.textContent='Menu +';}));
-// Scroll overflowing rows; cycle the available logos when the whole row fits.
+// Mobile: two complete logo slots per page. Desktop: preserve the existing cycle.
 (()=>{
-  const row=document.querySelector('#client-logos');
-  if(!row)return;
-  function move(direction){
-    const max=row.scrollWidth-row.clientWidth;
-    if(max<=2){
-      if(row.children.length>1){
-        if(direction>0)row.append(row.firstElementChild);
-        else row.prepend(row.lastElementChild);
-      }
-      return;
-    }
-    const step=Math.max(160,row.clientWidth*.75);
-    let left=row.scrollLeft+direction*step;
-    if(direction>0&&row.scrollLeft>=max-2)left=0;
-    if(direction<0&&row.scrollLeft<=2)left=max;
-    row.scrollTo({left:Math.max(0,Math.min(max,left)),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+ const row=document.querySelector('#client-logos');
+ if(!row)return;
+ const mobile=matchMedia('(max-width:700px)');
+ let page=0;
+ const behavior=()=>matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth';
+ function render(animate=false){
+  const slots=[...row.children];
+  slots.forEach((slot,i)=>{slot.inert=mobile.matches&&Math.floor(i/2)!==page;});
+  if(mobile.matches){
+   const gap=parseFloat(getComputedStyle(row).gap)||0;
+   row.scrollTo({left:page*(row.clientWidth+gap),behavior:animate?behavior():'instant'});
   }
-  document.querySelectorAll('[data-client-direction]').forEach(button=>button.addEventListener('click',()=>move(Number(button.dataset.clientDirection))));
-  row.addEventListener('keydown',event=>{
-    if(event.key==='ArrowLeft'||event.key==='ArrowRight'){
-      event.preventDefault();move(event.key==='ArrowLeft'?-1:1);
-    }
-  });
+ }
+ function move(direction){
+  if(mobile.matches){
+   const count=Math.ceil(row.children.length/2);
+   page=(page+direction+count)%count;
+   render(true);return;
+  }
+  const max=row.scrollWidth-row.clientWidth;
+  if(max<=2){
+   if(row.children.length>1){
+    if(direction>0)row.append(row.firstElementChild);else row.prepend(row.lastElementChild);
+   }
+   return;
+  }
+  let left=row.scrollLeft+direction*Math.max(160,row.clientWidth*.75);
+  if(direction>0&&row.scrollLeft>=max-2)left=0;
+  if(direction<0&&row.scrollLeft<=2)left=max;
+  row.scrollTo({left:Math.max(0,Math.min(max,left)),behavior:behavior()});
+ }
+ document.querySelectorAll('[data-client-direction]').forEach(b=>b.addEventListener('click',()=>move(Number(b.dataset.clientDirection))));
+ row.addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();move(e.key==='ArrowLeft'?-1:1);}
+ });
+ mobile.addEventListener('change',()=>{page=0;row.scrollLeft=0;render();});
+ new ResizeObserver(()=>render()).observe(row);
+ render();
 })();
 
 const copyEmail=document.querySelector('#copy-email');
