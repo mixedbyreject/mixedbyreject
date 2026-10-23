@@ -223,6 +223,6 @@ header .nav-contact{display:inline-flex;align-items:center;justify-content:cente
 @media(max-width:600px){.section-head p,.section-head>.eyebrow{margin-left:0}}
 
 /* Rotate the supplied artwork inside the existing hero frame. */
-.hero-photo{background:url(images/hero-tribal-landscape.svg) center/cover no-repeat;filter:brightness(.55)}
+.hero-photo{background:url(hero-tribal-landscape.svg) center/cover no-repeat;filter:brightness(.55)}
 .hero:after{background:linear-gradient(90deg,rgba(0,0,0,.56),rgba(0,0,0,.18) 75%),linear-gradient(0deg,rgba(0,0,0,.3),transparent 55%)}
 @media(max-width:700px){.hero:after{background:linear-gradient(90deg,rgba(0,0,0,.62),rgba(0,0,0,.3))}}
